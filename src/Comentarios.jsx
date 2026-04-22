@@ -7,15 +7,15 @@ const ComentariosSeguros = () => {
   const enviarComentario = async (e) => {
     e.preventDefault();
     try {
-      // 1. Usamos la variable de entorno para la URL
-      // 2. Si no existe, usamos la de Railway por defecto
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'https://backend-le-os-production.up.railway.app/api';
+      // 1. Usamos la variable de entorno actualizada (sin el /api)
+      // Si la variable no carga, usamos la URL base directa de Railway
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'https://backend-le-os-production.up.railway.app';
 
+      // 2. Apuntamos a /comentarios (que ahora es la ruta directa en tu index.js)
       const response = await fetch(`${apiBaseUrl}/comentarios`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          // 3. ENVIAMOS LA API KEY DESDE LAS VARIABLES DE ENTORNO
           'x-api-key': import.meta.env.VITE_API_KEY 
         },
         body: JSON.stringify({ texto: comentario }),
@@ -27,10 +27,10 @@ const ComentariosSeguros = () => {
 
       const data = await response.json();
       setComentarioRecibido(data.texto); 
-      setComentario(''); // Limpiamos el input después de enviar
+      setComentario(''); // Limpiar el campo
     } catch (error) {
       console.error("Error al enviar comentario:", error);
-      alert("No se pudo enviar el comentario. Verifica la seguridad (API Key).");
+      alert("Error de conexión. Verifica que el Backend y la API Key estén activos.");
     }
   };
 
